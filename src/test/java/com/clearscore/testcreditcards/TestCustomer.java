@@ -37,7 +37,7 @@ public class TestCustomer {
 
         whenCustomerDetailsAreSet(VALID_FULL_NAME, VALID_CREDIT_SCORE, VALID_SALARY);
 
-        thenNoErrorIsLogged();
+        thenNoViolations();
     }
 
     @Test
@@ -46,9 +46,8 @@ public class TestCustomer {
         givenCustomerDetails();
 
         whenCustomerDetailsAreSet(INVALID_FULL_NAME, INVALID_CREDIT_SCORE, INVALID_SALARY);
-        
-        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
-        assertThat(violations.size()).isEqualTo(3);
+
+        thenViolationsAreLogged();
     }
 
     void givenCustomerDetails() {
@@ -59,11 +58,11 @@ public class TestCustomer {
         customer = new Customer(fullName, creditScore, salary);
     }
 
-    private void thenNoErrorIsLogged() {
-        assertThat(customer
-                .getName()).isEqualTo(VALID_FULL_NAME)
+    private void thenNoViolations() {
+        assertThat(customer.getName()).isEqualTo(VALID_FULL_NAME)
                 .isNotBlank()
                 .isNotNull();
+
         assertThat(customer.getSalary())
                 .isEqualTo(VALID_SALARY)
                 .isNotNull();
@@ -73,4 +72,8 @@ public class TestCustomer {
                 .isNotNull();
     }
 
+    private void thenViolationsAreLogged() {
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+        assertThat(violations.size()).isEqualTo(3);
+    }
 }
