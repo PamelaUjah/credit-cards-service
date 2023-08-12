@@ -1,6 +1,5 @@
 package com.clearscore.creditcards;
 
-import com.clearscore.exceptions.InternalServerException;
 import com.clearscore.exceptions.InvalidParametersException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
