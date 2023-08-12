@@ -1,6 +1,13 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: credit cards service
+
+server:
+  port: 8080
+
+external-services:
+  csCards: https://app.clearscore.com/api/global/backend-tech-test/v1/cards
+  scoredCards: https://app.clearscore.com/api/global/backend-tech-test/v2/creditcards
+
+request:
+  userAgent: Mozilla/5.0 Firefox/26.0

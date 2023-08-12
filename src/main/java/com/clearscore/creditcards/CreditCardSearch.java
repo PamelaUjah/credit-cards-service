@@ -5,12 +5,11 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data //generates getters and setters
 @Builder //creates instance of Customer
 @AllArgsConstructor
-public class Customer {
+public class CreditCardSearch {
     //TODO add regex for full name
     @NotBlank(message = "Full Name is mandatory")
     @Schema(name = "Full Name", example = "John Smith", description = "Users full name")
