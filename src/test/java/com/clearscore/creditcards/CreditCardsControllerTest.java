@@ -1,6 +1,10 @@
 package com.clearscore.creditcards;
 
+import com.clearscore.cscardprovider.CsCardResponse;
+import com.clearscore.cscardprovider.CsCardsRequest;
+import com.clearscore.cscardprovider.CsCardsService;
 import com.clearscore.exceptions.InvalidParametersException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -27,7 +32,10 @@ class CreditCardsControllerTest {
     private final String URL = "https://www.clearscore.com/api/v1/creditcards";
 
     @Mock
-    private CreditCardServiceImpl creditCardServiceImpl;
+    private CreditCardService creditCardService;
+
+    @Mock
+    private CsCardsService csCardsService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,11 +43,23 @@ class CreditCardsControllerTest {
     private ArrayList<CreditCard> creditCards;
 
     @Mock
+    private CsCardsRequest csCardsRequest;
+
+    @Mock
+    private CreditCardSearch creditCardSearch;
+
+    @Mock
+    private CsCardResponse csCardResponse1;
+
+    @Mock
+    private CsCardResponse csCardResponse2;
+
+    @Mock
     private CreditCardRequest creditCardRequest;
 
     @BeforeEach
     void beforeAll() {
-        reset(creditCardRequest, creditCardServiceImpl);
+        reset(creditCardRequest, creditCardService);
     }
 
     //todo: test not found
@@ -47,11 +67,19 @@ class CreditCardsControllerTest {
     @Test
     @DisplayName("Given valid credit card search is made, when recommended credit cards are returned, successful response is provided ")
     void testRetrieveCreditCardRecommendations() {
+        givenCreditCardRequest();
         givenValidCreditCardSearch();
+        givenValidCsCardsRequest();
+        givenValidCsCardsResponse();
 
+        whenCsCardsProviderReturnsSuccessfulResponse();
         whenCreditCardsAreReturned();
 
         thenSuccessfulResponse();
+    }
+
+    private void whenCsCardsProviderReturnsSuccessfulResponse() {
+        when(csCardsService.buildCSCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
     }
 
     @Test
@@ -94,15 +122,40 @@ class CreditCardsControllerTest {
         creditCards.add(new CreditCard("CSCards", "SuperSaver Card", 21.4, 0.137));
         creditCards.add(new CreditCard("CSCards", "SuperSpender Card", 19.2, 0.135));
 
-        when(creditCardServiceImpl.retrieveCreditCardRecommendations(creditCardRequest)).thenReturn(creditCards);
+        when(creditCardService.retrieveCreditCardRecommendations(creditCardRequest)).thenReturn(creditCards);
     }
 
     private void whenBadRequest() {
-        when(creditCardServiceImpl.retrieveCreditCardRecommendations(null)).thenThrow(InvalidParametersException.class);
+        when(creditCardService.retrieveCreditCardRecommendations(null)).thenThrow(InvalidParametersException.class);
+    }
+
+    private void givenCreditCardRequest() {
+        creditCardRequest = new CreditCardRequest("John Smith", 400, 50000);
+    }
+
+    private void givenValidCsCardsRequest() {
+        csCardsRequest = new CsCardsRequest("John Smith", 400);
     }
 
     private void givenValidCreditCardSearch() {
-        creditCardRequest = new CreditCardRequest("John Smith", 400, 50000);
+        creditCardSearch = new CreditCardSearch("John Smith", 400, 50000);
+    }
+
+
+    private void givenValidCsCardsResponse() {
+        csCardResponse1 = new CsCardResponse("SuperSaver Card", 21.6, 6.3);
+        csCardResponse2 = new CsCardResponse("SuperSpender Card", 19.2, 5.0);
+        //String response1 = objectMapper.writeValueAsString(csCardResponse1);
+        //String response2 = objectMapper.writeValueAsString(csCardResponse2);
+
+        List<CsCardResponse> list = new ArrayList<>();
+        list.add(csCardResponse1);
+        list.add(csCardResponse2);
+        when(csCardsService.retrieveCreditCardProducts(csCardsRequest)).thenReturn(list);
+
+        //csCardResponseList = new CsCardResponseList();
+        //csCardResponseList.setCsCardResponses(list);
+
     }
 
     private void givenInvalidCreditCardSearch() {

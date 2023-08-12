@@ -13,11 +13,11 @@ import java.util.ArrayList;
 @RequestMapping("api/v1/creditcards")
 public class CreditCardsController {
 
-    private final CreditCardService creditCardServiccreditCardService;
+    private final CreditCardService creditCardService;
 
     @Autowired
     public CreditCardsController(CreditCardService creditCardService) {
-        this.creditCardServiccreditCardService = creditCardService;
+        this.creditCardService = creditCardService;
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
@@ -25,7 +25,7 @@ public class CreditCardsController {
     public ArrayList<CreditCard> retrieveCreditCardRecommendations(@RequestBody CreditCardRequest creditCardRequest) throws InternalServerException {
         try {
             log.info("Get Customer Credit Card Recommendations {}", creditCardRequest);
-            return creditCardServiccreditCardService.retrieveCreditCardRecommendations(creditCardRequest);
+            return creditCardService.retrieveCreditCardRecommendations(creditCardRequest);
         } catch (Exception exception) {
             throw new InternalServerException("Error: ", exception);
         }

@@ -1,5 +1,7 @@
 package com.clearscore.creditcards;
 
+import com.clearscore.cscardprovider.CsCardResponse;
+import com.clearscore.cscardprovider.CsCardsRequest;
 import com.clearscore.cscardprovider.CsCardsService;
 import com.clearscore.exceptions.InvalidParametersException;
 import com.clearscore.scoredcardsprovider.ScoredCardsService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -18,7 +21,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Autowired
     private final Validator validator;
+    @Autowired
     private ScoredCardsService scoredCardsService;
+    @Autowired
     private CsCardsService csCardsService;
 
     private static final Logger logger = LoggerFactory.getLogger(CreditCardServiceImpl.class);
@@ -33,10 +38,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         validateRequest(creditCardSearch);
 
-        //todo: build provider service
-        //CsCardsRequest request = csCardsService.buildCSCardsRequest(creditCardSearch);
+        CsCardsRequest request = csCardsService.buildCSCardsRequest(creditCardSearch);
 
-        //csCardsService.retrieveCreditCardProducts(request);
+        List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(request);
         return null;
     }
 
