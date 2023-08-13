@@ -1,7 +1,6 @@
-package com.clearscore.cscardprovider;
+package com.clearscore.scoredcardsprovider;
 
 import com.clearscore.configuration.CreditCardsConfig;
-
 import com.clearscore.exceptions.InvalidParametersException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,12 +15,12 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class CsCardsServiceImplTest {
+class ScoredCardsServiceImplTest {
 
-    public static final String CS_CARDS_URL = "https://app.clearscore.com/api/global/backend-tech-test/v1/cards";
+    public static final String CS_CARD_URL = "https://app.clearscore.com/api/global/backend-tech-test/v1/cards";
     public static final String SCORED_CARDS_URL = "https://app.clearscore.com/api/global/backend-tech-test/v2/creditcards";
     public static final String USER_AGENT = "Mozilla/5.0 Firefox/26.0";
     @Autowired
@@ -31,15 +30,15 @@ class CsCardsServiceImplTest {
     private CreditCardsConfig creditCardsConfig;
 
     @Mock
-    private CsCardsRequest csCardsRequest;
+    private ScoredCardsRequest scoredCardsRequest;
 
     @Mock
-    private CsCardResponse csCardResponse;
+    private ScoredCardsResponse scoredCardsResponse;
 
     @InjectMocks
-    private CsCardsServiceImpl csCardsService;
+    private ScoredCardsServiceImpl scoredCardsService;
 
-    private List<CsCardResponse> csCardResponses;
+    private List<ScoredCardsResponse> scoredCardsResponses;
 
     private Exception exception;
 
@@ -47,13 +46,13 @@ class CsCardsServiceImplTest {
     void setUp() {
         creditCardsConfig = new CreditCardsConfig();
         restTemplate = new RestTemplate();
-        csCardsService = new CsCardsServiceImpl(creditCardsConfig, restTemplate);
+        scoredCardsService = new ScoredCardsServiceImpl(creditCardsConfig, restTemplate);
     }
 
     @Test
-    @DisplayName("Given request to CsCard provider for a user with cards available, when service is called, then credit cards are successfully returned")
+    @DisplayName("Given request to Scored Cards provider for a user with cards available, when service is called, then credit cards are successfully returned")
     void testRetrieveCreditCardProducts() {
-        givenSuccessfulCsCardsRequest();
+        givenSuccessfulScoredCardsRequest();
         givenConfiguration();
         givenAvailableCards();
 
@@ -80,38 +79,36 @@ class CsCardsServiceImplTest {
     }
 
     private void thenSuccessfulResponse() {
-        assertThat(csCardResponses.size()).isEqualTo(2);
+        assertThat(scoredCardsResponses.size()).isEqualTo(1);
     }
 
     private void givenAvailableCards() {
-        CsCardResponse csCardResponse1 = new CsCardResponse("SuperSaver Card", 21.6, 6.3);
-        CsCardResponse csCardResponse2 = new CsCardResponse("SuperSpender Card", 19.2, 5.0);
+        ScoredCardsResponse scoredCardsResponse = new ScoredCardsResponse("Scored Card", 21.6, 6.3);
 
-        List<CsCardResponse> list = new ArrayList<>();
-        list.add(csCardResponse1);
-        list.add(csCardResponse2);
+        List<ScoredCardsResponse> list = new ArrayList<>();
+        list.add(scoredCardsResponse);
     }
 
     private void givenConfiguration() {
-        creditCardsConfig.setCsCards(CS_CARDS_URL);
+        creditCardsConfig.setCsCards(CS_CARD_URL);
         creditCardsConfig.setScoredCards(SCORED_CARDS_URL);
         creditCardsConfig.setUserAgent(USER_AGENT);
     }
 
     private void whenCreditCardsAreRetrieved() {
         try {
-            csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
+            scoredCardsResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
         } catch (Exception e) {
             exception = e;
         }
     }
 
-    private void givenSuccessfulCsCardsRequest() {
-        csCardsRequest = new CsCardsRequest("Michael Smith", 550);
+    private void givenSuccessfulScoredCardsRequest() {
+        scoredCardsRequest = new ScoredCardsRequest("Michael Smith", 550, 70000);
     }
 
     private void givenBadCsCardsRequest() {
-        csCardsRequest = new CsCardsRequest(null, null);
+        scoredCardsRequest = new ScoredCardsRequest(null, null, null);
     }
 
     //todo: add testcases to test other types of exceptions
