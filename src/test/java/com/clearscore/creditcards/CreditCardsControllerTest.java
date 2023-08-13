@@ -4,6 +4,9 @@ import com.clearscore.cscardprovider.CsCardResponse;
 import com.clearscore.cscardprovider.CsCardsRequest;
 import com.clearscore.cscardprovider.CsCardsService;
 import com.clearscore.exceptions.InvalidParametersException;
+import com.clearscore.scoredcardsprovider.ScoredCardsRequest;
+import com.clearscore.scoredcardsprovider.ScoredCardsResponse;
+import com.clearscore.scoredcardsprovider.ScoredCardsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,13 +39,21 @@ class CreditCardsControllerTest {
     @Mock
     private CsCardsService csCardsService;
 
+    @Mock
+    private ScoredCardsService scoredCardsService;
+
     @Autowired
     private MockMvc mockMvc;
 
     private ArrayList<CreditCard> creditCards;
 
+    private ArrayList<CreditCard> creditCardsScoredCards;
+
     @Mock
     private CsCardsRequest csCardsRequest;
+
+    @Mock
+    private ScoredCardsRequest scoredCardsRequest;
 
     @Mock
     private CreditCardSearch creditCardSearch;
@@ -54,7 +65,12 @@ class CreditCardsControllerTest {
     private CsCardResponse csCardResponse2;
 
     @Mock
+    private ScoredCardsResponse scoredCardsResponse;
+
+    @Mock
     private CreditCardRequest creditCardRequest;
+
+    private Exception exception;
 
     @BeforeEach
     void beforeAll() {
@@ -69,16 +85,23 @@ class CreditCardsControllerTest {
         givenCreditCardRequest();
         givenValidCreditCardSearch();
         givenValidCsCardsRequest();
+        givenValidScoredCardsRequest();
         givenValidCsCardsResponse();
+        givenValidScoredCardsResponse();
 
-        whenCsCardsProviderReturnsSuccessfulResponse();
+        whenCsCardsRequestIsMade();
+        whenScoredCardsRequestIsMade();
         whenCreditCardsAreReturned();
 
         thenSuccessfulResponse();
     }
 
-    private void whenCsCardsProviderReturnsSuccessfulResponse() {
-        when(csCardsService.buildCSCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
+    private void whenCsCardsRequestIsMade() {
+        when(csCardsService.buildCsCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
+    }
+
+    private void whenScoredCardsRequestIsMade() {
+        when(scoredCardsService.buildScoredCardRequest(creditCardSearch)).thenReturn(scoredCardsRequest);
     }
 
     @Test
@@ -99,7 +122,7 @@ class CreditCardsControllerTest {
                             .content(requestBody))
                     .andExpect(status().isBadRequest());
         } catch (Exception e) {
-            // do nothing
+            exception = e;
         }
     }
 
@@ -136,6 +159,10 @@ class CreditCardsControllerTest {
         csCardsRequest = new CsCardsRequest("John Smith", 400);
     }
 
+    private void givenValidScoredCardsRequest() {
+        scoredCardsRequest = new ScoredCardsRequest("John Smith", 400, 50000);
+    }
+
     private void givenValidCreditCardSearch() {
         creditCardSearch = new CreditCardSearch("John Smith", 400, 50000);
     }
@@ -150,6 +177,15 @@ class CreditCardsControllerTest {
         list.add(csCardResponse2);
 
         when(csCardsService.retrieveCreditCardProducts(csCardsRequest)).thenReturn(list);
+    }
+
+    private void givenValidScoredCardsResponse() {
+        scoredCardsResponse = new ScoredCardsResponse("ScoredCard Card", 31.5, 2.3);
+
+        List<ScoredCardsResponse> list = new ArrayList<>();
+        list.add(scoredCardsResponse);
+
+        when(scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest)).thenReturn(list);
     }
 
     private void givenInvalidCreditCardSearch() {

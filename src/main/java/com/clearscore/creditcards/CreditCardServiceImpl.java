@@ -4,6 +4,8 @@ import com.clearscore.cscardprovider.CsCardResponse;
 import com.clearscore.cscardprovider.CsCardsRequest;
 import com.clearscore.cscardprovider.CsCardsService;
 import com.clearscore.exceptions.InvalidParametersException;
+import com.clearscore.scoredcardsprovider.ScoredCardsRequest;
+import com.clearscore.scoredcardsprovider.ScoredCardsResponse;
 import com.clearscore.scoredcardsprovider.ScoredCardsService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -38,9 +40,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         validateRequest(creditCardSearch);
 
-        CsCardsRequest request = csCardsService.buildCSCardsRequest(creditCardSearch);
+        CsCardsRequest csCardsRequest = csCardsService.buildCsCardsRequest(creditCardSearch);
+        ScoredCardsRequest scoredCardsRequest = scoredCardsService.buildScoredCardRequest(creditCardSearch);
 
-        List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(request);
+        List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
+        List<ScoredCardsResponse> scoredCardResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
         return null;
     }
 
@@ -67,6 +71,5 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 }
 
-//todo: add two methods to send requests to providers (reference method in individual services)
 //todo: method to collate response into response back to user
 }

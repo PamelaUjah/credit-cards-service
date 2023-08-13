@@ -46,7 +46,7 @@ public class CsCardsServiceImpl implements CsCardsService {
     }
 
     @Override
-    public CsCardsRequest buildCSCardsRequest(CreditCardSearch creditCardSearch) {
+    public CsCardsRequest buildCsCardsRequest(CreditCardSearch creditCardSearch) {
         return CsCardsRequest.builder()
                 .name(creditCardSearch.getName())
                 .creditScore(creditCardSearch.getCreditScore())
