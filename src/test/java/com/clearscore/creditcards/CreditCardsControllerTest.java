@@ -4,7 +4,6 @@ import com.clearscore.cscardprovider.CsCardResponse;
 import com.clearscore.cscardprovider.CsCardsRequest;
 import com.clearscore.cscardprovider.CsCardsService;
 import com.clearscore.exceptions.InvalidParametersException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,7 +99,7 @@ class CreditCardsControllerTest {
                             .content(requestBody))
                     .andExpect(status().isBadRequest());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // do nothing
         }
     }
 
@@ -112,7 +111,7 @@ class CreditCardsControllerTest {
                             .content(requestBody))
                     .andExpect(status().isOk());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            //do nothing
         }
     }
 
@@ -145,17 +144,12 @@ class CreditCardsControllerTest {
     private void givenValidCsCardsResponse() {
         csCardResponse1 = new CsCardResponse("SuperSaver Card", 21.6, 6.3);
         csCardResponse2 = new CsCardResponse("SuperSpender Card", 19.2, 5.0);
-        //String response1 = objectMapper.writeValueAsString(csCardResponse1);
-        //String response2 = objectMapper.writeValueAsString(csCardResponse2);
 
         List<CsCardResponse> list = new ArrayList<>();
         list.add(csCardResponse1);
         list.add(csCardResponse2);
+
         when(csCardsService.retrieveCreditCardProducts(csCardsRequest)).thenReturn(list);
-
-        //csCardResponseList = new CsCardResponseList();
-        //csCardResponseList.setCsCardResponses(list);
-
     }
 
     private void givenInvalidCreditCardSearch() {

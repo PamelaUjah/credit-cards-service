@@ -1,12 +1,10 @@
 package com.clearscore.utils;
 
-import com.clearscore.exceptions.InternalServerException;
 import com.clearscore.exceptions.InvalidParametersException;
 import com.clearscore.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
