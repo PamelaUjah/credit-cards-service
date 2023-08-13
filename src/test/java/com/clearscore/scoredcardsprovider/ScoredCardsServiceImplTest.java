@@ -83,7 +83,7 @@ class ScoredCardsServiceImplTest {
     }
 
     private void givenAvailableCards() {
-        ScoredCardsResponse scoredCardsResponse = new ScoredCardsResponse("Scored Card", 21.6, 6.3);
+        ScoredCardsResponse scoredCardsResponse = new ScoredCardsResponse("ScoredCards", "Scored Card", 21.6, 6.3, null);
 
         List<ScoredCardsResponse> list = new ArrayList<>();
         list.add(scoredCardsResponse);

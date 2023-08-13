@@ -8,4 +8,4 @@ server:
 external-services:
   csCards: https://app.clearscore.com/api/global/backend-tech-test/v1/cards
   scoredCards: https://app.clearscore.com/api/global/backend-tech-test/v2/creditcards
-  userAgent: Mozilla/5.0 Firefox/26.0
+  userAgent: application/json

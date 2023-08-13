@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CreditCardServiceImpl implements CreditCardService {
@@ -45,6 +46,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
         List<ScoredCardsResponse> scoredCardResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
+
+        csCardResponses.forEach(CsCardResponse::setCardScore);
+
+        //method in the response to calculate the card score and sets it - for each card response, set the card score
+        // stream responses into one list (list of credit card) and sorts based on card score
         return null;
     }
 

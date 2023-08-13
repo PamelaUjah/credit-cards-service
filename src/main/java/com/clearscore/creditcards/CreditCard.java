@@ -8,8 +8,12 @@ import lombok.Data;
 @Builder
 @Data
 public class CreditCard {
+
     private String provider;
+
     private String name;
+
     private Double apr;
+
     private Double cardScore;
 }

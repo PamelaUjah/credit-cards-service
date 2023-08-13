@@ -84,8 +84,8 @@ class CsCardsServiceImplTest {
     }
 
     private void givenAvailableCards() {
-        CsCardResponse csCardResponse1 = new CsCardResponse("SuperSaver Card", 21.6, 6.3);
-        CsCardResponse csCardResponse2 = new CsCardResponse("SuperSpender Card", 19.2, 5.0);
+        CsCardResponse csCardResponse1 = new CsCardResponse("CsCards", "SuperSaver Card", 21.6, 6.3, null);
+        CsCardResponse csCardResponse2 = new CsCardResponse("CsCards", "SuperSpender Card", 19.2, 5.0, null);
 
         List<CsCardResponse> list = new ArrayList<>();
         list.add(csCardResponse1);

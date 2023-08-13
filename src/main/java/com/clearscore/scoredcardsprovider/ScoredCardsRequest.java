@@ -8,7 +8,10 @@ import lombok.Data;
 @Builder //creates instance of Customer
 @AllArgsConstructor
 public class ScoredCardsRequest {
+
     private String name;
+
     private Integer score;
+
     private Integer salary;
 }

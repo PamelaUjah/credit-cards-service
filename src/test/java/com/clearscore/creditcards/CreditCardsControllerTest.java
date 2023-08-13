@@ -70,8 +70,6 @@ class CreditCardsControllerTest {
     @Mock
     private CreditCardRequest creditCardRequest;
 
-    private Exception exception;
-
     @BeforeEach
     void beforeAll() {
         reset(creditCardRequest, creditCardService);
@@ -122,7 +120,7 @@ class CreditCardsControllerTest {
                             .content(requestBody))
                     .andExpect(status().isBadRequest());
         } catch (Exception e) {
-            exception = e;
+            //do nothing as we don't want test classes to throw exceptions
         }
     }
 
@@ -169,8 +167,8 @@ class CreditCardsControllerTest {
 
 
     private void givenValidCsCardsResponse() {
-        csCardResponse1 = new CsCardResponse("SuperSaver Card", 21.6, 6.3);
-        csCardResponse2 = new CsCardResponse("SuperSpender Card", 19.2, 5.0);
+        csCardResponse1 = new CsCardResponse("CsCards", "SuperSaver Card", 21.6, 6.3, null);
+        csCardResponse2 = new CsCardResponse("CsCards", "SuperSpender Card", 19.2, 5.0, null);
 
         List<CsCardResponse> list = new ArrayList<>();
         list.add(csCardResponse1);
@@ -180,7 +178,7 @@ class CreditCardsControllerTest {
     }
 
     private void givenValidScoredCardsResponse() {
-        scoredCardsResponse = new ScoredCardsResponse("ScoredCard Card", 31.5, 2.3);
+        scoredCardsResponse = new ScoredCardsResponse("CsCards", "ScoredCard Card", 31.5, 2.3, null);
 
         List<ScoredCardsResponse> list = new ArrayList<>();
         list.add(scoredCardsResponse);
