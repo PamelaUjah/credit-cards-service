@@ -9,6 +9,7 @@ import com.clearscore.scoredcardsprovider.ScoredCardsResponse;
 import com.clearscore.scoredcardsprovider.ScoredCardsService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 
     @Autowired
@@ -36,7 +39,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         this.validator = validator;
     }
 
-    public ArrayList<CreditCard> retrieveCreditCardRecommendations(CreditCardRequest creditCardRequest) {
+    public List<CreditCard> retrieveCreditCardRecommendations(CreditCardRequest creditCardRequest) {
         CreditCardSearch creditCardSearch = buildCreditCardSearch(creditCardRequest);
 
         validateRequest(creditCardSearch);
@@ -48,10 +51,18 @@ public class CreditCardServiceImpl implements CreditCardService {
         List<ScoredCardsResponse> scoredCardResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
 
         csCardResponses.forEach(CsCardResponse::setCardScore);
+        scoredCardResponses.forEach(ScoredCardsResponse::setCardScore);
 
-        //method in the response to calculate the card score and sets it - for each card response, set the card score
-        // stream responses into one list (list of credit card) and sorts based on card score
-        return null;
+        List<CreditCard> creditCardsFromCsProvider = csCardResponses.stream().map(CreditCardServiceImpl::buildCreditCardForCsCardProvider).toList();
+        List<CreditCard> creditCardsFromScoredCardsProvider = scoredCardResponses.stream().map(CreditCardServiceImpl::buildCreditCardForScoredCardsProvider).toList();
+        log.info("CreditCards retrieved");
+        return createRecommendations(creditCardsFromCsProvider,creditCardsFromScoredCardsProvider);
+    }
+
+    private List<CreditCard> createRecommendations(List<CreditCard> creditCardsFromCsProvider, List<CreditCard> creditCardsFromScoredCardsProvider) {
+        List<CreditCard> cards = Stream.concat(creditCardsFromCsProvider.stream(), creditCardsFromScoredCardsProvider.stream())
+                .collect(Collectors.toList());
+        return cards;
     }
 
     private static CreditCardSearch buildCreditCardSearch(CreditCardRequest creditCardRequest) {
@@ -59,6 +70,24 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .name(creditCardRequest.getName())
                 .creditScore(creditCardRequest.getCreditScore())
                 .salary(creditCardRequest.getSalary())
+                .build();
+    }
+
+    private static CreditCard buildCreditCardForCsCardProvider(CsCardResponse csCardResponse){
+        return CreditCard.builder()
+                .provider(csCardResponse.getProvider())
+                .name((csCardResponse.getName()))
+                .apr(csCardResponse.getApr())
+                .cardScore(csCardResponse.getCardScore())
+                .build();
+    }
+
+    private static CreditCard buildCreditCardForScoredCardsProvider(ScoredCardsResponse scoredCardsResponse){
+        return CreditCard.builder()
+                .provider(scoredCardsResponse.getProvider())
+                .name((scoredCardsResponse.getName()))
+                .apr(scoredCardsResponse.getApr())
+                .cardScore(scoredCardsResponse.getCardScore())
                 .build();
     }
 

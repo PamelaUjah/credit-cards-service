@@ -1,12 +1,12 @@
 package com.clearscore.creditcards;
 
 import com.clearscore.exceptions.InternalServerException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class CreditCardsController {
 
     private final CreditCardService creditCardService;
+    private ObjectMapper objectMapper;
 
     @Autowired
     public CreditCardsController(CreditCardService creditCardService) {
@@ -21,8 +22,7 @@ public class CreditCardsController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    @ResponseStatus(value = HttpStatus.OK, reason = "A sorted list of credit cards the user is eligible to apply for.")
-    public ArrayList<CreditCard> retrieveCreditCardRecommendations(@RequestBody CreditCardRequest creditCardRequest) throws InternalServerException {
+    public List<CreditCard> retrieveCreditCardRecommendations(@RequestBody CreditCardRequest creditCardRequest) throws InternalServerException {
         try {
             log.info("Get Customer Credit Card Recommendations {}", creditCardRequest);
             return creditCardService.retrieveCreditCardRecommendations(creditCardRequest);

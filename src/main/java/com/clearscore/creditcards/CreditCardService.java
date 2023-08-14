@@ -1,7 +1,7 @@
 package com.clearscore.creditcards;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface CreditCardService {
-    ArrayList<CreditCard> retrieveCreditCardRecommendations(CreditCardRequest creditCardRequest);
+    List<CreditCard> retrieveCreditCardRecommendations(CreditCardRequest creditCardRequest);
 }
