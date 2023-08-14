@@ -33,12 +33,10 @@ public class ScoredCardsServiceImpl implements ScoredCardsService {
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             HttpEntity<String> httpRequest = new HttpEntity<>(jsonRequest, headers);
-
             restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
 
             ResponseEntity<List<ScoredCardsResponse>> response = restTemplate.exchange(creditCardsConfig.getScoredCards(), HttpMethod.POST, httpRequest,
-                    new ParameterizedTypeReference<>() {
-                    });
+                    new ParameterizedTypeReference<>() {});
             return response.getBody();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

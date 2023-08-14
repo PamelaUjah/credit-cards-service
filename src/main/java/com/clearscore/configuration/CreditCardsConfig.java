@@ -14,7 +14,9 @@ import org.springframework.web.client.RestTemplate;
 public class CreditCardsConfig {
 
     private String csCards;
+
     private String scoredCards;
+
     private String userAgent;
 
     @Bean

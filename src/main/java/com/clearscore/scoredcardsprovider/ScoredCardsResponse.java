@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.math3.util.Precision;
 
-@Data //generates getters and setters
-@Builder //creates instance of Customer
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScoredCardsResponse {

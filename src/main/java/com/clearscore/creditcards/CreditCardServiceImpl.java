@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +32,10 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Autowired
     private CsCardsService csCardsService;
 
+    private CsCardsRequest csCardsRequest;
+
+    private ScoredCardsRequest scoredCardsRequest;
+
     private static final Logger logger = LoggerFactory.getLogger(CreditCardServiceImpl.class);
 
     @Autowired
@@ -44,8 +48,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         validateRequest(creditCardSearch);
 
-        CsCardsRequest csCardsRequest = csCardsService.buildCsCardsRequest(creditCardSearch);
-        ScoredCardsRequest scoredCardsRequest = scoredCardsService.buildScoredCardRequest(creditCardSearch);
+        buildCardRequest(creditCardSearch);
 
         List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
         List<ScoredCardsResponse> scoredCardResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
@@ -55,14 +58,18 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         List<CreditCard> creditCardsFromCsProvider = csCardResponses.stream().map(CreditCardServiceImpl::buildCreditCardForCsCardProvider).toList();
         List<CreditCard> creditCardsFromScoredCardsProvider = scoredCardResponses.stream().map(CreditCardServiceImpl::buildCreditCardForScoredCardsProvider).toList();
-        log.info("CreditCards retrieved");
-        return createRecommendations(creditCardsFromCsProvider,creditCardsFromScoredCardsProvider);
+
+        return createRecommendations(creditCardsFromCsProvider, creditCardsFromScoredCardsProvider);
+    }
+
+    private void buildCardRequest(CreditCardSearch creditCardSearch) {
+        csCardsRequest = csCardsService.buildCsCardsRequest(creditCardSearch);
+        scoredCardsRequest = scoredCardsService.buildScoredCardRequest(creditCardSearch);
     }
 
     private List<CreditCard> createRecommendations(List<CreditCard> creditCardsFromCsProvider, List<CreditCard> creditCardsFromScoredCardsProvider) {
-        List<CreditCard> cards = Stream.concat(creditCardsFromCsProvider.stream(), creditCardsFromScoredCardsProvider.stream())
-                .collect(Collectors.toList());
-        return cards;
+        return Stream.concat(creditCardsFromCsProvider
+                .stream(), creditCardsFromScoredCardsProvider.stream()).sorted(Comparator.comparing(CreditCard::getCardScore).reversed()).collect(Collectors.toList());
     }
 
     private static CreditCardSearch buildCreditCardSearch(CreditCardRequest creditCardRequest) {
@@ -73,7 +80,7 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .build();
     }
 
-    private static CreditCard buildCreditCardForCsCardProvider(CsCardResponse csCardResponse){
+    private static CreditCard buildCreditCardForCsCardProvider(CsCardResponse csCardResponse) {
         return CreditCard.builder()
                 .provider(csCardResponse.getProvider())
                 .name((csCardResponse.getName()))
@@ -82,7 +89,7 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .build();
     }
 
-    private static CreditCard buildCreditCardForScoredCardsProvider(ScoredCardsResponse scoredCardsResponse){
+    private static CreditCard buildCreditCardForScoredCardsProvider(ScoredCardsResponse scoredCardsResponse) {
         return CreditCard.builder()
                 .provider(scoredCardsResponse.getProvider())
                 .name((scoredCardsResponse.getName()))
@@ -103,8 +110,6 @@ public class CreditCardServiceImpl implements CreditCardService {
                 }
                 throw new InvalidParametersException(String.valueOf(violations));
             }
+        }
     }
-}
-
-//todo: method to collate response into response back to user
 }

@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-@Data //generates getters and setters
-@Builder //creates instance of Customer
+@Data
+@Builder
 @AllArgsConstructor
 public class CreditCardSearch {
-    //TODO add regex for full name
+
     @NotBlank(message = "Full Name is mandatory")
     @Schema(name = "Full Name", example = "John Smith", description = "Users full name")
     private String name;
@@ -23,5 +23,4 @@ public class CreditCardSearch {
     @Min(0)
     @Schema(name = "Salary", example = "28000", description = "Users annual salary")
     private Integer salary;
-
 }
