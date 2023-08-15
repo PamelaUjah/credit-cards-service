@@ -5,7 +5,6 @@ import com.clearscore.creditcards.CreditCardSearch;
 import com.clearscore.utils.RestTemplateResponseErrorHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -15,13 +14,17 @@ import org.springframework.web.client.*;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class CsCardsServiceImpl implements CsCardsService {
 
-    @Autowired
     private CreditCardsConfig creditCardsConfig;
-    @Autowired
+
     private RestTemplate restTemplate;
+
+    @Autowired
+    public CsCardsServiceImpl(CreditCardsConfig creditCardsConfig, RestTemplate restTemplate) {
+        this.creditCardsConfig = creditCardsConfig;
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public List<CsCardResponse> retrieveCreditCardProducts(CsCardsRequest request) {

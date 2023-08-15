@@ -9,8 +9,8 @@ import org.apache.commons.math3.util.Precision;
 
 import java.math.RoundingMode;
 
-@Data //generates getters and setters
-@Builder //creates instance of Customer
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CsCardResponse {

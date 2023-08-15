@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +25,7 @@ class CsCardsServiceImplTest {
     public static final String CS_CARDS_URL = "https://app.clearscore.com/api/global/backend-tech-test/v1/cards";
     public static final String SCORED_CARDS_URL = "https://app.clearscore.com/api/global/backend-tech-test/v2/creditcards";
     public static final String USER_AGENT = "Mozilla/5.0 Firefox/26.0";
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -45,6 +47,7 @@ class CsCardsServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         creditCardsConfig = new CreditCardsConfig();
         restTemplate = new RestTemplate();
         csCardsService = new CsCardsServiceImpl(creditCardsConfig, restTemplate);

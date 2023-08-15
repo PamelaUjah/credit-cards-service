@@ -15,7 +15,6 @@ import java.util.List;
 public class CreditCardsController {
 
     private final CreditCardService creditCardService;
-    private ObjectMapper objectMapper;
 
     @Autowired
     public CreditCardsController(CreditCardService creditCardService) {

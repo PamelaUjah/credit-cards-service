@@ -45,10 +45,6 @@ class CreditCardsControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private ArrayList<CreditCard> creditCards;
-
-    private ArrayList<CreditCard> creditCardsScoredCards;
-
     @Mock
     private CsCardsRequest csCardsRequest;
 
@@ -70,12 +66,14 @@ class CreditCardsControllerTest {
     @Mock
     private CreditCardRequest creditCardRequest;
 
+    private ArrayList<CreditCard> creditCards;
+
     @BeforeEach
     void beforeAll() {
-        reset(creditCardRequest, creditCardService);
+        reset(creditCardService, scoredCardsService, csCardsService);
     }
 
-    //todo: test not found
+    //Integration test which tests the application end to end
 
     @Test
     @DisplayName("Given valid credit card search is made, when recommended credit cards are returned, successful response is provided ")
@@ -121,7 +119,7 @@ class CreditCardsControllerTest {
     }
 
     private void givenValidScoredCardsResponse() {
-        scoredCardsResponse = new ScoredCardsResponse("CsCards", "ScoredCard Card", 31.5, 2.3, null);
+        scoredCardsResponse = new ScoredCardsResponse("Scored Cards", "ScoredCard Card", 31.5, 2.3, null);
 
         List<ScoredCardsResponse> list = new ArrayList<>();
         list.add(scoredCardsResponse);

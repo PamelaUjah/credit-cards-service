@@ -25,11 +25,10 @@ import java.util.stream.Stream;
 @Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 
-    @Autowired
     private final Validator validator;
-    @Autowired
+
     private ScoredCardsService scoredCardsService;
-    @Autowired
+
     private CsCardsService csCardsService;
 
     private CsCardsRequest csCardsRequest;
@@ -39,8 +38,10 @@ public class CreditCardServiceImpl implements CreditCardService {
     private static final Logger logger = LoggerFactory.getLogger(CreditCardServiceImpl.class);
 
     @Autowired
-    public CreditCardServiceImpl(Validator validator) {
+    public CreditCardServiceImpl(Validator validator, CsCardsService csCardsService, ScoredCardsService scoredCardsService) {
         this.validator = validator;
+        this.csCardsService = csCardsService;
+        this.scoredCardsService = scoredCardsService;
     }
 
     public List<CreditCard> retrieveCreditCardRecommendations(CreditCardRequest creditCardRequest) {
