@@ -54,7 +54,6 @@ class ScoredCardsServiceImplTest {
     void testRetrieveCreditCardProducts() {
         givenSuccessfulScoredCardsRequest();
         givenConfiguration();
-        givenAvailableCards();
 
         whenCreditCardsAreRetrieved();
 
@@ -66,7 +65,6 @@ class ScoredCardsServiceImplTest {
     void testBadRequest() {
         givenBadCsCardsRequest();
         givenConfiguration();
-        givenAvailableCards();
 
         whenCreditCardsAreRetrieved();
 
@@ -80,13 +78,6 @@ class ScoredCardsServiceImplTest {
 
     private void thenSuccessfulResponse() {
         assertThat(scoredCardsResponses.size()).isEqualTo(1);
-    }
-
-    private void givenAvailableCards() {
-        ScoredCardsResponse scoredCardsResponse = new ScoredCardsResponse("ScoredCards", "Scored Card", 21.6, 6.3, null);
-
-        List<ScoredCardsResponse> list = new ArrayList<>();
-        list.add(scoredCardsResponse);
     }
 
     private void givenConfiguration() {

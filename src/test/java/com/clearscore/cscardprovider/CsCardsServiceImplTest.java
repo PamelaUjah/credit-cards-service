@@ -74,15 +74,6 @@ class CsCardsServiceImplTest {
         thenBadRequestResponse();
     }
 
-    private void thenBadRequestResponse() {
-        assertThat(exception).isInstanceOf(InvalidParametersException.class);
-        assertThat(exception).hasMessage("The request contained invalid parameters");
-    }
-
-    private void thenSuccessfulResponse() {
-        assertThat(csCardResponses.size()).isEqualTo(2);
-    }
-
     private void givenAvailableCards() {
         CsCardResponse csCardResponse1 = new CsCardResponse("CsCards", "SuperSaver Card", 21.6, 6.3, null);
         CsCardResponse csCardResponse2 = new CsCardResponse("CsCards", "SuperSpender Card", 19.2, 5.0, null);
@@ -98,14 +89,6 @@ class CsCardsServiceImplTest {
         creditCardsConfig.setUserAgent(USER_AGENT);
     }
 
-    private void whenCreditCardsAreRetrieved() {
-        try {
-            csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
-        } catch (Exception e) {
-            exception = e;
-        }
-    }
-
     private void givenSuccessfulCsCardsRequest() {
         csCardsRequest = new CsCardsRequest("Michael Smith", 550);
     }
@@ -114,5 +97,20 @@ class CsCardsServiceImplTest {
         csCardsRequest = new CsCardsRequest(null, null);
     }
 
-    //todo: add testcases to test other types of exceptions
+    private void whenCreditCardsAreRetrieved() {
+        try {
+            csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
+        } catch (Exception e) {
+            exception = e;
+        }
+    }
+
+    private void thenBadRequestResponse() {
+        assertThat(exception).isInstanceOf(InvalidParametersException.class);
+        assertThat(exception).hasMessage("The request contained invalid parameters");
+    }
+
+    private void thenSuccessfulResponse() {
+        assertThat(csCardResponses.size()).isEqualTo(2);
+    }
 }

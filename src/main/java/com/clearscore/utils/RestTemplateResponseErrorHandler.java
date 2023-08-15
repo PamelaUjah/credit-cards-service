@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
+import java.rmi.ServerException;
 
 @Component
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
@@ -24,6 +25,12 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
             throw new InvalidParametersException("The request contained invalid parameters");
         } else if (httpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
             throw new NotFoundException("User Details Not Found");
+        }
+        else if (httpResponse.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR){
+            throw new ServerException("Issue with connecting to server");
+        }
+        else if (httpResponse.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE){
+            throw new ServerException("Issue with connecting to server");
         }
     }
 }

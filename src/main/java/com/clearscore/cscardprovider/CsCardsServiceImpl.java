@@ -36,8 +36,8 @@ public class CsCardsServiceImpl implements CsCardsService {
             HttpEntity<String> httpRequest = new HttpEntity<>(jsonRequest, headers);
             restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
 
-            ResponseEntity<List<CsCardResponse>> response = restTemplate.exchange(creditCardsConfig.getCsCards(), HttpMethod.POST, httpRequest,
-                    new ParameterizedTypeReference<>() {});
+            ResponseEntity<List<CsCardResponse>> response = restTemplate.exchange(creditCardsConfig.getCsCards(),
+                    HttpMethod.POST, httpRequest, new ParameterizedTypeReference<>() {});
             return response.getBody();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

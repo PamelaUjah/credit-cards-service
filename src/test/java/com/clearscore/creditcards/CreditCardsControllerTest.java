@@ -94,14 +94,6 @@ class CreditCardsControllerTest {
         thenSuccessfulResponse();
     }
 
-    private void whenCsCardsRequestIsMade() {
-        when(csCardsService.buildCsCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
-    }
-
-    private void whenScoredCardsRequestIsMade() {
-        when(scoredCardsService.buildScoredCardRequest(creditCardSearch)).thenReturn(scoredCardsRequest);
-    }
-
     @Test
     @DisplayName("Given invalid credit card search is made, when recommended credit cards is not returned, unsuccessful response ")
     void testInvalidRequest() {
@@ -110,55 +102,6 @@ class CreditCardsControllerTest {
         whenBadRequest();
 
         thenBadRequestResponse();
-    }
-
-    private void thenBadRequestResponse() {
-        try {
-            String requestBody = objectMapper.writeValueAsString(creditCardRequest);
-            this.mockMvc.perform(post(URL)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestBody))
-                    .andExpect(status().isBadRequest());
-        } catch (Exception e) {
-            //do nothing as we don't want test classes to throw exceptions
-        }
-    }
-
-    private void thenSuccessfulResponse() {
-        try {
-            String requestBody = objectMapper.writeValueAsString(creditCardRequest);
-            this.mockMvc.perform(post(URL)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestBody))
-                    .andExpect(status().isOk());
-        } catch (Exception e) {
-            //do nothing
-        }
-    }
-
-    private void whenCreditCardsAreReturned() {
-        creditCards = new ArrayList<>();
-        creditCards.add(new CreditCard("ScoredCards", "ScoredCard Builder", 19.4, 0.212));
-        creditCards.add(new CreditCard("CSCards", "SuperSaver Card", 21.4, 0.137));
-        creditCards.add(new CreditCard("CSCards", "SuperSpender Card", 19.2, 0.135));
-
-        when(creditCardService.retrieveCreditCardRecommendations(creditCardRequest)).thenReturn(creditCards);
-    }
-
-    private void whenBadRequest() {
-        when(creditCardService.retrieveCreditCardRecommendations(null)).thenThrow(InvalidParametersException.class);
-    }
-
-    private void givenCreditCardRequest() {
-        creditCardRequest = new CreditCardRequest("John Smith", 400, 50000);
-    }
-
-    private void givenValidCsCardsRequest() {
-        csCardsRequest = new CsCardsRequest("John Smith", 400);
-    }
-
-    private void givenValidScoredCardsRequest() {
-        scoredCardsRequest = new ScoredCardsRequest("John Smith", 400, 50000);
     }
 
     private void givenValidCreditCardSearch() {
@@ -188,5 +131,62 @@ class CreditCardsControllerTest {
 
     private void givenInvalidCreditCardSearch() {
         creditCardRequest = null;
+    }
+
+    private void givenCreditCardRequest() {
+        creditCardRequest = new CreditCardRequest("John Smith", 400, 50000);
+    }
+
+    private void givenValidCsCardsRequest() {
+        csCardsRequest = new CsCardsRequest("John Smith", 400);
+    }
+
+    private void givenValidScoredCardsRequest() {
+        scoredCardsRequest = new ScoredCardsRequest("John Smith", 400, 50000);
+    }
+
+    private void whenCsCardsRequestIsMade() {
+        when(csCardsService.buildCsCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
+    }
+
+    private void whenCreditCardsAreReturned() {
+        creditCards = new ArrayList<>();
+        creditCards.add(new CreditCard("ScoredCards", "ScoredCard Builder", 19.4, 0.212));
+        creditCards.add(new CreditCard("CSCards", "SuperSaver Card", 21.4, 0.137));
+        creditCards.add(new CreditCard("CSCards", "SuperSpender Card", 19.2, 0.135));
+
+        when(creditCardService.retrieveCreditCardRecommendations(creditCardRequest)).thenReturn(creditCards);
+    }
+
+    private void whenScoredCardsRequestIsMade() {
+        when(scoredCardsService.buildScoredCardRequest(creditCardSearch)).thenReturn(scoredCardsRequest);
+    }
+
+    private void whenBadRequest() {
+        when(creditCardService.retrieveCreditCardRecommendations(null)).thenThrow(InvalidParametersException.class);
+    }
+
+    private void thenBadRequestResponse() {
+        try {
+            String requestBody = objectMapper.writeValueAsString(creditCardRequest);
+            this.mockMvc.perform(post(URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isBadRequest());
+        } catch (Exception e) {
+            //do nothing as we don't want test classes to throw exceptions
+        }
+    }
+
+    private void thenSuccessfulResponse() {
+        try {
+            String requestBody = objectMapper.writeValueAsString(creditCardRequest);
+            this.mockMvc.perform(post(URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isOk());
+        } catch (Exception e) {
+            //do nothing as we don't want test classes to throw exceptions
+        }
     }
 }

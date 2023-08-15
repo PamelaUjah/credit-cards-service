@@ -20,6 +20,7 @@ class CreditCardSearchTest {
     public static final int INVALID_SALARY = -1;
 
     private CreditCardSearch creditCardSearch;
+
     private static Validator validator;
 
     @BeforeAll
