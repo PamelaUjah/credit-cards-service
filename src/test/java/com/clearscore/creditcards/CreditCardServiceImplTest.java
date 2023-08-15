@@ -3,6 +3,7 @@ package com.clearscore.creditcards;
 import com.clearscore.cscardprovider.CsCardResponse;
 import com.clearscore.cscardprovider.CsCardsRequest;
 import com.clearscore.cscardprovider.CsCardsServiceImpl;
+import com.clearscore.exceptions.InvalidParametersException;
 import com.clearscore.scoredcardsprovider.ScoredCardsRequest;
 import com.clearscore.scoredcardsprovider.ScoredCardsResponse;
 import com.clearscore.scoredcardsprovider.ScoredCardsServiceImpl;
@@ -85,7 +86,32 @@ class CreditCardServiceImplTest {
         whenCreatingRecommendationsFromMultipleProviders();
 
         thenCreditCardListIsNotEmpty();
+        thenNoExceptionIsThrown();
 
+    }
+
+    @Test
+    @DisplayName("Given valid credit card search, when validated, then exception is thrown")
+    void testValidRequest() {
+        givenValidCreditCardSearch();
+
+        whenSearchIsValidated();
+
+        thenNoExceptionIsThrown();
+    }
+
+    @Test
+    @DisplayName("Given invalid credit card search, when validated, then exception is thrown")
+    void testInvalidRequest() {
+        givenInvalidCreditCardSearch();
+
+        whenSearchIsValidated();
+
+        thenExceptionIsThrown();
+    }
+
+    void givenInvalidCreditCardSearch() {
+        creditCardSearch = new CreditCardSearch(" ", 750, -1);
     }
 
     private void givenValidScoreCardProviderRequest() {
@@ -112,7 +138,6 @@ class CreditCardServiceImplTest {
         list.add(csCardResponse2);
         list.add(csCardResponse3);
 
-        when(csCardsService.buildCsCardsRequest(creditCardSearch)).thenReturn(csCardsRequest);
         when(csCardsService.retrieveCreditCardProducts(csCardsRequest)).thenReturn(list);
     }
 
@@ -126,7 +151,6 @@ class CreditCardServiceImplTest {
         List<ScoredCardsResponse> list = new ArrayList<>();
         list.add(scoredCardsResponse1);
 
-        when(scoredCardsService.buildScoredCardRequest(creditCardSearch)).thenReturn(scoredCardsRequest);
         when(scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest)).thenReturn(list);
     }
 
@@ -138,13 +162,23 @@ class CreditCardServiceImplTest {
         }
     }
 
+    private void whenSearchIsValidated() {
+        try {
+            creditCardService.validateRequest(creditCardSearch);
+        } catch (Exception e) {
+            exception = e;
+        }
+    }
+
     private void thenCreditCardListIsNotEmpty() {
-        assertThat(exception).isNull();
         assertThat(creditCardList).size().isEqualTo(4);
     }
 
-    @Test
-    void validateRequest() {
+    private void thenNoExceptionIsThrown(){
+        assertThat(exception).isNull();
     }
 
+    private void thenExceptionIsThrown() {
+        assertThat(exception).isNotNull().isInstanceOf(InvalidParametersException.class);
+    }
 }

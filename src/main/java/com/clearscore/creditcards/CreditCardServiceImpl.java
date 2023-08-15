@@ -8,7 +8,9 @@ import com.clearscore.scoredcardsprovider.ScoredCardsRequest;
 import com.clearscore.scoredcardsprovider.ScoredCardsResponse;
 import com.clearscore.scoredcardsprovider.ScoredCardsService;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 
-    private final Validator validator;
+    private Validator validator;
 
     private ScoredCardsService scoredCardsService;
 
@@ -54,6 +56,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         List<CsCardResponse> csCardResponses = csCardsService.retrieveCreditCardProducts(csCardsRequest);
         List<ScoredCardsResponse> scoredCardResponses = scoredCardsService.retrieveCreditCardProducts(scoredCardsRequest);
 
+        // Include scenario if results are empty here -->
         csCardResponses.forEach(CsCardResponse::setCardScore);
         scoredCardResponses.forEach(ScoredCardsResponse::setCardScore);
 
@@ -103,6 +106,8 @@ public class CreditCardServiceImpl implements CreditCardService {
         if (creditCardSearch == null) {
             throw new InvalidParametersException("Error: Request body is null");
         } else {
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            validator = factory.getValidator();
             Set<ConstraintViolation<CreditCardSearch>> violations = validator.validate(creditCardSearch);
 
             if (!violations.isEmpty()) {

@@ -23,7 +23,7 @@ public class CreditCardsConfig {
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
                 .errorHandler(new RestTemplateResponseErrorHandler())
-                //.setConnectTimeout(Duration.ofSeconds(20))
+                //.setConnectTimeout(Duration.ofSeconds(20)) --> include timeout requirement as required
                 //.setReadTimeout(Duration.ofSeconds(20))
                 .build();
     }
