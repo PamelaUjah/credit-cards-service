@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: credit cards service
+server:
+  port: ${HTTP_PORT}
+external-services:
+  csCards: ${CSCARDS_ENDPOINT}
+  scoredCards: ${SCOREDCARDS_ENDPOINT}
+  userAgent: application/json
