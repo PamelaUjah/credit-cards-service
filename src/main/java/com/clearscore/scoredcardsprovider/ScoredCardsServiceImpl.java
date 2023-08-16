@@ -5,6 +5,7 @@ import com.clearscore.creditcards.CreditCardSearch;
 import com.clearscore.utils.RestTemplateResponseErrorHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class ScoredCardsServiceImpl implements ScoredCardsService {
 
@@ -41,9 +43,11 @@ public class ScoredCardsServiceImpl implements ScoredCardsService {
 
             ResponseEntity<List<ScoredCardsResponse>> response = restTemplate.exchange(creditCardsConfig.getScoredCards(), HttpMethod.POST, httpRequest,
                     new ParameterizedTypeReference<>() {});
+            log.info("Scored Card provider has successfully returned credit cards");
             return response.getBody();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (JsonProcessingException exception) {
+            log.error("Issue converting to Json Object when requesting from Cs Card Provider", exception);
+            throw new RuntimeException(exception);
         }
     }
 

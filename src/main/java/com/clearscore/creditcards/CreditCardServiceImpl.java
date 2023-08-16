@@ -104,6 +104,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     public void validateRequest(CreditCardSearch creditCardSearch) {
         if (creditCardSearch == null) {
+            log.error("Credit Card Request is Null");
             throw new InvalidParametersException("Error: Request body is null");
         } else {
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -114,6 +115,7 @@ public class CreditCardServiceImpl implements CreditCardService {
                 for (ConstraintViolation<CreditCardSearch> violation : violations) {
                     logger.error(violation.getMessage());
                 }
+                log.error("Credit Card Search is not valid");
                 throw new InvalidParametersException(String.valueOf(violations));
             }
         }

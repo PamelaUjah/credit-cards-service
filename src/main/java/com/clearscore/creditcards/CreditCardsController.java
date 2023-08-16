@@ -1,8 +1,6 @@
 package com.clearscore.creditcards;
 
-import com.clearscore.exceptions.InvalidParametersException;
 import com.clearscore.exceptions.ServerException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +23,12 @@ public class CreditCardsController {
     public List<CreditCard> retrieveCreditCardRecommendations(@RequestBody CreditCardRequest creditCardRequest) throws ServerException {
         try {
             log.info("Get Customer Credit Card Recommendations {}", creditCardRequest);
-            return creditCardService.retrieveCreditCardRecommendations(creditCardRequest);
+            List<CreditCard> creditCards = creditCardService.retrieveCreditCardRecommendations(creditCardRequest);
+            log.info("Credit Card Recommendations for {}: {}", creditCardRequest.getName(), creditCards);
+            return creditCards;
         } catch (Exception exception) {
-            throw new InvalidParametersException(exception);
+            log.info("Error processing credit card recommendations", exception);
+            throw new ServerException(exception);
         }
     }
 }
