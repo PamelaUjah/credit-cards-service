@@ -1,11 +1,11 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: credit cards service
-
 server:
-  port: 8080
-
+  port: ${HTTP_PORT}
 external-services:
-  csCards: https://app.clearscore.com/api/global/backend-tech-test/v1/cards
-  scoredCards: https://app.clearscore.com/api/global/backend-tech-test/v2/creditcards
+  csCards: ${CSCARDS_ENDPOINT}
+  scoredCards: ${SCOREDCARDS_ENDPOINT}
   userAgent: application/json

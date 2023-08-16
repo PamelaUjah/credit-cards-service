@@ -1,7 +1,8 @@
-package com.clearscore.configuration;
+package com.clearscore.config;
 
 import com.clearscore.utils.RestTemplateResponseErrorHandler;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

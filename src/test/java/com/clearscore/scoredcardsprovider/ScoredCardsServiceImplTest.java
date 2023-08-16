@@ -1,6 +1,6 @@
 package com.clearscore.scoredcardsprovider;
 
-import com.clearscore.configuration.CreditCardsConfig;
+import com.clearscore.config.CreditCardsConfig;
 import com.clearscore.exceptions.InvalidParametersException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,6 +1,6 @@
 package com.clearscore.cscardprovider;
 
-import com.clearscore.configuration.CreditCardsConfig;
+import com.clearscore.config.CreditCardsConfig;
 
 import com.clearscore.exceptions.InvalidParametersException;
 import org.junit.jupiter.api.BeforeEach;

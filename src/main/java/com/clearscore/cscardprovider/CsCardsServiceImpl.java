@@ -1,6 +1,6 @@
 package com.clearscore.cscardprovider;
 
-import com.clearscore.configuration.CreditCardsConfig;
+import com.clearscore.config.CreditCardsConfig;
 import com.clearscore.creditcards.CreditCardSearch;
 import com.clearscore.utils.RestTemplateResponseErrorHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
