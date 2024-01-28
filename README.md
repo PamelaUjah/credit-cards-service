@@ -1,4 +1,4 @@
-# ClearScore - Credit Card Service
+# Credit Card Service
 
 ## Details
 - Credit Card Service is a microservice that collates financial products from a small selection of partners. 
